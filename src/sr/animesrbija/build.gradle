@@ -1,13 +1,11 @@
 ext {
-    extKmkVersionCode = 0
     extName = 'Anime Srbija'
     extClass = '.AnimeSrbija'
-    extVersionCode = 11
+    extVersionCode = 15
 }
 
 apply from: "$rootDir/common.gradle"
 
 dependencies {
     implementation(project(':lib:filemoon-extractor'))
-    implementation(libs.jsunpacker)
 }

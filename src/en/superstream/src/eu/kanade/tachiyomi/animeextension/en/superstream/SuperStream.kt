@@ -1,7 +1,5 @@
 package eu.kanade.tachiyomi.animeextension.en.superstream
 
-import android.app.Application
-import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceScreen
@@ -13,12 +11,11 @@ import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.SEpisode
 import eu.kanade.tachiyomi.animesource.model.Video
 import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
+import keiyoushi.utils.getPreferencesLazy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.Response
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import java.util.Date
 
@@ -33,7 +30,7 @@ class SuperStream : ConfigurableAnimeSource, AnimeHttpSource() {
 
     private val json: Json by injectLazy()
 
-    private val preferences: SharedPreferences = Injekt.get<Application>().getSharedPreferences("source_$id", 0x0000)
+    private val preferences by getPreferencesLazy()
 
     private val hideNsfw = if (preferences.getBoolean(PREF_HIDE_NSFW_KEY, PREF_HIDE_NSFW_DEFAULT)) 1 else 0
 
@@ -96,8 +93,7 @@ class SuperStream : ConfigurableAnimeSource, AnimeHttpSource() {
 
     override suspend fun getVideoList(episode: SEpisode): List<Video> {
         val videos = superStreamAPI.loadLinks(episode.url)
-        val sortedVideos = videos.sort()
-        return sortedVideos
+        return videos
     }
 
     override fun videoListParse(response: Response) = throw UnsupportedOperationException()
@@ -216,7 +212,7 @@ class SuperStream : ConfigurableAnimeSource, AnimeHttpSource() {
 
             setOnPreferenceChangeListener { _, newValue ->
                 val new = newValue as Boolean
-                Toast.makeText(screen.context, "Restart Aniyomi to apply new setting.", Toast.LENGTH_LONG).show()
+                Toast.makeText(screen.context, "Restart App to apply new setting.", Toast.LENGTH_LONG).show()
                 preferences.edit().putBoolean(key, new).commit()
             }
         }.also(screen::addPreference)

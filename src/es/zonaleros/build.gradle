@@ -1,8 +1,7 @@
 ext {
-    extKmkVersionCode = 0
     extName = 'Zonaleros'
     extClass = '.Zonaleros'
-    extVersionCode = 1
+    extVersionCode = 6
 }
 
 apply from: "$rootDir/common.gradle"

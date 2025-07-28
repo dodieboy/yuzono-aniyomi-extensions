@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.animeextension.en.aniplay
 
-import android.app.Application
 import android.net.Uri
 import android.util.Base64
 import android.util.Log
@@ -18,6 +17,7 @@ import eu.kanade.tachiyomi.multisrc.anilist.AniListAnimeHttpSource
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.util.parallelFlatMap
 import eu.kanade.tachiyomi.util.parseAs
+import keiyoushi.utils.getPreferencesLazy
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import okhttp3.Headers
@@ -26,8 +26,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -44,9 +42,7 @@ class AniPlay : AniListAnimeHttpSource(), ConfigurableAnimeSource {
 
     private val playlistUtils by lazy { PlaylistUtils(client, headers) }
 
-    private val preferences by lazy {
-        Injekt.get<Application>().getSharedPreferences("source_$id", 0x0000)
-    }
+    private val preferences by getPreferencesLazy()
 
     /* ================================= AniList configurations ================================= */
 
@@ -239,7 +235,7 @@ class AniPlay : AniListAnimeHttpSource(), ConfigurableAnimeSource {
             throw Exception("Timed out")
         }
 
-        return videos.sort()
+        return videos
     }
 
     private fun getVideos(extra: EpisodeExtra, language: String, request: Request): List<Video> {
@@ -285,9 +281,8 @@ class AniPlay : AniListAnimeHttpSource(), ConfigurableAnimeSource {
 
         try {
             when (serverName) {
-                // yuki
-                PREF_SERVER_ENTRIES[1] -> {
-                    val url = "https://yukiprox.aniplaynow.live/m3u8-proxy?url=${defaultSource.url}&headers={\"Referer\":\"https://megacloud.club/\"}"
+                "Yuki" -> {
+                    val url = "https://yukiproxy.aniplaynow.live/m3u8-proxy?url=${defaultSource.url}&headers={\"Referer\":\"https://megacloud.club/\"}"
                     return playlistUtils.extractFromHls(
                         playlistUrl = url,
                         videoNameGen = { quality -> "$serverName - $quality - $typeName" },
@@ -308,9 +303,8 @@ class AniPlay : AniListAnimeHttpSource(), ConfigurableAnimeSource {
                         },
                     )
                 }
-                // pahe
-                PREF_SERVER_ENTRIES[2] -> {
-                    val url = "https://prox.aniplaynow.live/?url=${defaultSource.url}&ref=https://kwik.si"
+                "Pahe" -> {
+                    val url = "https://paheproxy.aniplaynow.live/proxy?url=${defaultSource.url}&headers={\"Referer\":\"https://kwik.si/\"}"
                     val headers = headers.newBuilder().apply {
                         set("Accept", "*/*")
                         set("Origin", baseUrl)
@@ -446,7 +440,7 @@ class AniPlay : AniListAnimeHttpSource(), ConfigurableAnimeSource {
                 val selected = newValue as String
                 val index = findIndexOfValue(selected)
                 val entry = entryValues[index] as String
-                Toast.makeText(screen.context, "Restart Aniyomi to apply changes", Toast.LENGTH_LONG).show()
+                Toast.makeText(screen.context, "Restart App to apply changes", Toast.LENGTH_LONG).show()
                 preferences.edit().putString(key, entry).commit()
             }
         }.also(screen::addPreference)
@@ -565,8 +559,8 @@ class AniPlay : AniListAnimeHttpSource(), ConfigurableAnimeSource {
         private const val PREF_DOMAIN_DEFAULT = "aniplaynow.live"
 
         private const val PREF_SERVER_KEY = "server"
-        private val PREF_SERVER_ENTRIES = arrayOf("Maze", "Yuki", "Pahe", "Kuro")
-        private val PREF_SERVER_ENTRY_VALUES = arrayOf("maze", "yuki", "pahe", "kuro")
+        private val PREF_SERVER_ENTRIES = arrayOf("Pahe", "Yuki") // , "Hika")
+        private val PREF_SERVER_ENTRY_VALUES = arrayOf("pahe", "yuki") // , "hika")
         private const val PREF_SERVER_DEFAULT = "yuki"
         private const val SERVER_UNKNOWN = "Other"
 

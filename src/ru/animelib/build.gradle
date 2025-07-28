@@ -1,8 +1,7 @@
 ext {
-    extKmkVersionCode = 1
     extName = 'Animelib'
     extClass = '.Animelib'
-    extVersionCode = 4
+    extVersionCode = 8
     isNsfw = true
 }
 

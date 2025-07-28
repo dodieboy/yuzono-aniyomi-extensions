@@ -1,10 +1,9 @@
 ext {
-    extKmkVersionCode = 2
     extName = 'FlixLatam'
     extClass = '.FlixLatam'
     themePkg = 'dooplay'
     baseUrl = 'https://flixlatam.com'
-    overrideVersionCode = 4
+    overrideVersionCode = 11
 }
 
 apply from: "$rootDir/common.gradle"
@@ -28,7 +27,5 @@ dependencies {
     implementation(project(':lib:streamhidevid-extractor'))
     implementation(project(':lib:streamsilk-extractor'))
     implementation(project(':lib:vidguard-extractor'))
-    implementation(project(':lib:universal-extractor'))
     implementation(project(':lib:cryptoaes'))
-    implementation(libs.jsunpacker)
 }

@@ -1,8 +1,9 @@
 ext {
-    extKmkVersionCode = 0
     extName = 'Wcofun'
     extClass = '.Wcofun'
-    extVersionCode = 14
+    themePkg = 'wcotheme'
+    baseUrl = 'https://www.wcoflix.tv'
+    overrideVersionCode = 16
 }
 
 apply from: "$rootDir/common.gradle"

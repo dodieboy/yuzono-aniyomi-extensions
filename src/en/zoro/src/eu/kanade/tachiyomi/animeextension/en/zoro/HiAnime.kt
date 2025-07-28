@@ -15,7 +15,7 @@ import org.jsoup.nodes.Element
 class HiAnime : ZoroTheme(
     "en",
     "HiAnime",
-    "https://hianimez.to",
+    "https://hianime.to",
     hosterNames = listOf(
         "HD-1",
         "HD-2",
@@ -70,8 +70,8 @@ class HiAnime : ZoroTheme(
             ListPreference(screen.context).apply {
                 key = PREF_DOMAIN_KEY
                 title = "Preferred domain"
-                entries = arrayOf("hianimez.to", "hianime.to", "hianimez.is", "hianime.nz", "hianime.pe")
-                entryValues = arrayOf("https://hianimez.to", "https://hianime.to", "https://hianimez.is", "https://hianime.nz", "https://hianime.pe")
+                entries = arrayOf("hianime.to", "hianimez.to", "hianimez.is", "hianime.nz", "hianime.pe")
+                entryValues = arrayOf("https://hianime.to", "https://hianimez.to", "https://hianimez.is", "https://hianime.nz", "https://hianime.pe")
                 setDefaultValue(PREF_DOMAIN_DEFAULT)
                 summary = "%s"
 
@@ -81,7 +81,7 @@ class HiAnime : ZoroTheme(
                     val entry = entryValues[index] as String
                     Toast.makeText(
                         screen.context,
-                        "Restart Aniyomi to apply changes",
+                        "Restart App to apply changes",
                         Toast.LENGTH_LONG,
                     ).show()
                     preferences.edit().putString(key, entry).commit()
@@ -92,6 +92,6 @@ class HiAnime : ZoroTheme(
 
     companion object {
         private const val PREF_DOMAIN_KEY = "preferred_domain"
-        private const val PREF_DOMAIN_DEFAULT = "https://hianimez.to"
+        private const val PREF_DOMAIN_DEFAULT = "https://hianime.to"
     }
 }

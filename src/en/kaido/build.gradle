@@ -1,10 +1,9 @@
 ext {
-    extKmkVersionCode = 0
     extName = 'Kaido'
     extClass = '.Kaido'
     themePkg = 'zorotheme'
     baseUrl = 'https://kaido.to'
-    overrideVersionCode = 10
+    overrideVersionCode = 15
 }
 
 apply from: "$rootDir/common.gradle"

@@ -1,10 +1,9 @@
 ext {
-    extKmkVersionCode = 0
     extName = 'Animenosub'
     extClass = '.Animenosub'
     themePkg = 'animestream'
     baseUrl = 'https://animenosub.com'
-    overrideVersionCode = 8
+    overrideVersionCode = 12
     isNsfw = true
 }
 

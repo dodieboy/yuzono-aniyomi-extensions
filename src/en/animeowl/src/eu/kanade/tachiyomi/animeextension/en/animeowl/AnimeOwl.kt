@@ -1,7 +1,5 @@
 package eu.kanade.tachiyomi.animeextension.en.animeowl
 
-import android.app.Application
-import android.content.SharedPreferences
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.animeextension.en.animeowl.extractors.OwlExtractor
@@ -17,6 +15,7 @@ import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelFlatMap
 import eu.kanade.tachiyomi.util.parseAs
+import keiyoushi.utils.getPreferencesLazy
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
@@ -29,14 +28,12 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 import kotlin.math.ceil
 
 class AnimeOwl : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
 
-    override val name = "AnimeOwl"
+    override val name = "AnimeOwl (Dead)"
 
     override val baseUrl = "https://animeowl.me"
 
@@ -46,9 +43,7 @@ class AnimeOwl : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
 
     private val json: Json by injectLazy()
 
-    private val preferences: SharedPreferences by lazy {
-        Injekt.get<Application>().getSharedPreferences("source_$id", 0x0000)
-    }
+    private val preferences by getPreferencesLazy()
 
     private val owlServersExtractor by lazy { OwlExtractor(client, baseUrl) }
 
@@ -129,7 +124,7 @@ class AnimeOwl : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
         val document = response.asJsoup()
         val sub = document.select("#anime-cover-sub-content .episode-node").mapIndexed { idx, it ->
             EpisodeResponse.Episode(
-                id = it.attr("title").toDoubleOrNull(),
+                id = idx.toDouble(),
                 episodeIndex = idx.toString(),
                 name = it.attr("title"),
                 lang = "Sub",
@@ -138,7 +133,7 @@ class AnimeOwl : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
         }
         val dub = document.select("#anime-cover-dub-content .episode-node").mapIndexed { idx, it ->
             EpisodeResponse.Episode(
-                id = it.attr("title").toDoubleOrNull(),
+                id = idx.toDouble(),
                 episodeIndex = idx.toString(),
                 name = it.attr("title"),
                 lang = "Dub",
@@ -161,7 +156,7 @@ class AnimeOwl : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
 
     // ============================ Video Links =============================
     override suspend fun getVideoList(episode: SEpisode): List<Video> {
-        return json.decodeFromString<LinkData>(episode.url).links.parallelFlatMap { owlServersExtractor.extractOwlVideo(it) }.sort()
+        return json.decodeFromString<LinkData>(episode.url).links.parallelFlatMap { owlServersExtractor.extractOwlVideo(it) }
     }
 
     override fun videoFromElement(element: Element): Video = throw UnsupportedOperationException()
@@ -301,6 +296,6 @@ class AnimeOwl : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
         private const val PREF_QUALITY_KEY = "preferred_quality"
         private const val PREF_QUALITY_TITLE = "Preferred quality"
         private const val PREF_QUALITY_DEFAULT = "1080p"
-        private val PREF_QUALITY_LIST = arrayOf("1080p", "720p", "480p", "360p")
+        private val PREF_QUALITY_LIST = arrayOf("2K", "1080p", "720p", "480p", "360p")
     }
 }

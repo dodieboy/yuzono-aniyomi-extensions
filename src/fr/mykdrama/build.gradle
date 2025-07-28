@@ -1,10 +1,9 @@
 ext {
-    extKmkVersionCode = 2
     extName = 'MyKdrama'
     extClass = '.MyKdrama'
     themePkg = 'animestream'
     baseUrl = 'https://mykdrama.co'
-    overrideVersionCode = 1
+    overrideVersionCode = 6
 }
 
 apply from: "$rootDir/common.gradle"

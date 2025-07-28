@@ -1,10 +1,9 @@
 ext {
-    extKmkVersionCode = 0
     extName = 'AniSAGA'
     extClass = '.AniSAGA'
     themePkg = 'dooplay'
     baseUrl = 'https://www.anisaga.org'
-    overrideVersionCode = 16
+    overrideVersionCode = 23
     isNsfw = false
 }
 

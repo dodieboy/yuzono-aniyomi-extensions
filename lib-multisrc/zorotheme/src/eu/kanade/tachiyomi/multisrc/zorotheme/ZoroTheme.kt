@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.multisrc.zorotheme
 
-import android.app.Application
 import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.preference.ListPreference
@@ -20,6 +19,7 @@ import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMap
 import eu.kanade.tachiyomi.util.parallelMapNotNull
 import eu.kanade.tachiyomi.util.parseAs
+import keiyoushi.utils.getPreferencesLazy
 import kotlinx.serialization.json.Json
 import okhttp3.Headers
 import okhttp3.HttpUrl
@@ -28,8 +28,6 @@ import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import uy.kohesive.injekt.Injekt
-import uy.kohesive.injekt.api.get
 import uy.kohesive.injekt.injectLazy
 
 abstract class ZoroTheme(
@@ -43,9 +41,8 @@ abstract class ZoroTheme(
 
     private val json: Json by injectLazy()
 
-    val preferences: SharedPreferences by lazy {
-        Injekt.get<Application>().getSharedPreferences("source_$id", 0x0000)
-            .clearOldHosts()
+    val preferences by getPreferencesLazy {
+        clearOldHosts()
     }
 
     protected val docHeaders = headers.newBuilder().apply {
@@ -147,7 +144,7 @@ abstract class ZoroTheme(
         }
     }
 
-    private fun Element.getInfo(
+    open fun Element.getInfo(
         tag: String,
         isList: Boolean = false,
         full: Boolean = false,
@@ -161,7 +158,7 @@ abstract class ZoroTheme(
         return if (full && value != null) "\n$tag $value" else value
     }
 
-    private fun parseStatus(statusString: String?): Int {
+    protected fun parseStatus(statusString: String?): Int {
         return when (statusString) {
             "Currently Airing" -> SAnime.ONGOING
             "Finished Airing" -> SAnime.COMPLETED
@@ -236,7 +233,6 @@ abstract class ZoroTheme(
         }.flatten()
 
         return embedLinks.parallelCatchingFlatMap(::extractVideo)
-            .sort()
     }
 
     abstract fun extractVideo(server: VideoData): List<Video>
@@ -353,7 +349,7 @@ abstract class ZoroTheme(
                 val selected = newValue as String
                 val index = findIndexOfValue(selected)
                 val entry = entryValues[index] as String
-                Toast.makeText(screen.context, "Restart Aniyomi to apply new setting.", Toast.LENGTH_LONG).show()
+                Toast.makeText(screen.context, "Restart App to apply new setting.", Toast.LENGTH_LONG).show()
                 preferences.edit().putString(key, entry).commit()
             }
         }.also(screen::addPreference)
@@ -363,7 +359,7 @@ abstract class ZoroTheme(
             title = "Mark filler episodes"
             setDefaultValue(MARK_FILLERS_DEFAULT)
             setOnPreferenceChangeListener { _, newValue ->
-                Toast.makeText(screen.context, "Restart Aniyomi to apply new setting.", Toast.LENGTH_LONG).show()
+                Toast.makeText(screen.context, "Restart App to apply new setting.", Toast.LENGTH_LONG).show()
                 preferences.edit().putBoolean(key, newValue as Boolean).commit()
             }
         }.also(screen::addPreference)

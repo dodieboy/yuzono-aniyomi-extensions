@@ -244,7 +244,6 @@ Make sure that your new extension's `build.gradle` file follows the following st
 
 ```groovy
 ext {
-    extKmkVersionCode = 0
     extName = '<My source name>'
     extClass = '.<MySourceName>'
     extVersionCode = 1
@@ -600,7 +599,7 @@ To make local development more convenient, you can use the following run configu
 If you're running a Preview or debug build of Anikku:
 
 ```
--W -S -n app.anikku.debug/eu.kanade.tachiyomi.ui.main.MainActivity -a eu.kanade.tachiyomi.SHOW_CATALOGUES
+-W -S -n app.anikku.dev/eu.kanade.tachiyomi.ui.main.MainActivity -a eu.kanade.tachiyomi.SHOW_CATALOGUES
 ```
 
 And for a release build of Anikku:

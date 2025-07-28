@@ -1,8 +1,7 @@
 ext {
-    extKmkVersionCode = 2
     extName = 'Pelisplushd'
     extClass = '.PelisplushdFactory'
-    extVersionCode = 73
+    extVersionCode = 80
 }
 
 apply from: "$rootDir/common.gradle"
@@ -27,5 +26,6 @@ dependencies {
     implementation(project(':lib:streamsilk-extractor'))
     implementation(project(':lib:vidguard-extractor'))
     implementation(project(':lib:universal-extractor'))
-    implementation(libs.jsunpacker)
+    implementation(project(':lib:vidhide-extractor'))
+    implementation(project(':lib:cryptoaes'))
 }
