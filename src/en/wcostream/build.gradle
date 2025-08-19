@@ -1,10 +1,10 @@
 ext {
-    extKmkVersionCode = 0
+    extKmkVersionCode = 1
     extName = 'WCOStream'
     extClass = '.WCOStream'
     themePkg = 'wcotheme'
     baseUrl = 'https://www.wcostream.tv'
-    overrideVersionCode = 7
+    overrideVersionCode = 8
 }
 
 apply from: "$rootDir/common.gradle"

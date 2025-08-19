@@ -1,10 +1,10 @@
 ext {
-    extKmkVersionCode = 0
+    extKmkVersionCode = 1
     extName = 'AnimeBalkan'
     extClass = '.AnimeBalkan'
     themePkg = 'animestream'
     baseUrl = 'https://animebalkan.org'
-    overrideVersionCode = 5
+    overrideVersionCode = 6
 }
 
 apply from: "$rootDir/common.gradle"
