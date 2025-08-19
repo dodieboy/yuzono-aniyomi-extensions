@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -218,7 +218,7 @@ class AniWorld : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
                 when {
                     hoster.contains("VOE") && hosterSelection.contains(AWConstants.NAME_VOE) -> {
                         val url = client.newCall(GET(redirectgs)).execute().request.url.toString()
-                        videoList.addAll(VoeExtractor(client).videosFromUrl(url, "($language) "))
+                        videoList.addAll(VoeExtractor(client, headers).videosFromUrl(url, "($language) "))
                     }
 
                     hoster.contains("Doodstream") && hosterSelection.contains(AWConstants.NAME_DOOD) -> {

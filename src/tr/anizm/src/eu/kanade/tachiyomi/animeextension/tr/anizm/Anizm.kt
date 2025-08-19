@@ -30,7 +30,7 @@ import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
 import eu.kanade.tachiyomi.util.parseAs
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.Request
@@ -241,7 +241,7 @@ class Anizm : ParsedAnimeHttpSource(), ConfigurableAnimeSource {
     private val sibnetExtractor by lazy { SibnetExtractor(client) }
     private val streamtapeExtractor by lazy { StreamTapeExtractor(client) }
     private val uqloadExtractor by lazy { UqloadExtractor(client) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val yourUploadExtractor by lazy { YourUploadExtractor(client) }
 
     private fun getVideosFromUrl(firstUrl: String): List<Video> {

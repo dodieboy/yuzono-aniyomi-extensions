@@ -26,7 +26,7 @@ import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.lib.youruploadextractor.YourUploadExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -232,7 +232,7 @@ class AnimeMovil : ConfigurableAnimeSource, AnimeHttpSource() {
         try {
             return when {
                 embedUrl.contains("voe") -> {
-                    VoeExtractor(client).videosFromUrl(url).also(videoList::addAll)
+                    VoeExtractor(client, headers).videosFromUrl(url).also(videoList::addAll)
                 }
                 embedUrl.contains("filemoon") || embedUrl.contains("moonplayer") -> {
                     FilemoonExtractor(client).videosFromUrl(url, prefix = "Filemoon:").also(videoList::addAll)

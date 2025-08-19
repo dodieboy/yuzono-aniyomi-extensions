@@ -24,7 +24,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
 import eu.kanade.tachiyomi.util.parseAs
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.Serializable
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
@@ -341,7 +341,7 @@ class Jkanime : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
 
     /*--------------------------------Video extractors------------------------------------*/
     private val okruExtractor by lazy { OkruExtractor(client) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val filemoonExtractor by lazy { FilemoonExtractor(client) }
     private val streamTapeExtractor by lazy { StreamTapeExtractor(client) }
     private val mp4uploadExtractor by lazy { Mp4uploadExtractor(client) }

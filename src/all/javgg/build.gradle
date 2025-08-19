@@ -1,8 +1,7 @@
 ext {
-    extKmkVersionCode = 0
     extName = 'JavGG'
     extClass = '.Javgg'
-    extVersionCode = 11
+    extVersionCode = 12
     isNsfw = true
 }
 

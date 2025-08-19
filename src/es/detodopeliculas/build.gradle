@@ -1,10 +1,9 @@
 ext {
-    extKmkVersionCode = 1
     extName = 'DeTodoPeliculas'
     extClass = '.DeTodoPeliculas'
     themePkg = 'dooplay'
     baseUrl = 'https://detodopeliculas.nu'
-    overrideVersionCode = 9
+    overrideVersionCode = 10
 }
 
 apply from: "$rootDir/common.gradle"

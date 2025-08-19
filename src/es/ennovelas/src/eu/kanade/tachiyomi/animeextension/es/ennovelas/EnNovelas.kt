@@ -22,7 +22,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -160,7 +160,7 @@ class EnNovelas : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
             }
             if (link.contains("voe")) {
                 try {
-                    VoeExtractor(client).videosFromUrl(link).also(videoList::addAll)
+                    VoeExtractor(client, headers).videosFromUrl(link).also(videoList::addAll)
                 } catch (_: Exception) {}
             }
             if (link.contains("vudeo")) {

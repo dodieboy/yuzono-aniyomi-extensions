@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.animesource.online.AnimeHttpSource
 import eu.kanade.tachiyomi.lib.streamtapeextractor.StreamTapeExtractor
 import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.network.GET
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.float
@@ -215,7 +215,7 @@ class Movie4k : ConfigurableAnimeSource, AnimeHttpSource() {
                         link.contains("//voe.sx") || link.contains("//launchreliantcleaverriver") ||
                             link.contains("//fraudclatterflyingcar") ||
                             link.contains("//uptodatefinishconferenceroom") || link.contains("//realfinanceblogcenter") && hosterSelection?.contains("voe") == true -> {
-                            videoList.addAll(VoeExtractor(client).videosFromUrl(if (link.contains("https:")) link else "https:$link"))
+                            videoList.addAll(VoeExtractor(client, headers).videosFromUrl(if (link.contains("https:")) link else "https:$link"))
                         }
                     }
                 }
@@ -298,7 +298,7 @@ class Movie4k : ConfigurableAnimeSource, AnimeHttpSource() {
                     link.contains("//voe.sx") || link.contains("//launchreliantcleaverriver") ||
                         link.contains("//fraudclatterflyingcar") ||
                         link.contains("//uptodatefinishconferenceroom") || link.contains("//realfinanceblogcenter") && hosterSelection?.contains("voe") == true -> {
-                        videoList.addAll(VoeExtractor(client).videosFromUrl(if (link.contains("https:")) link else "https:$link"))
+                        videoList.addAll(VoeExtractor(client, headers).videosFromUrl(if (link.contains("https:")) link else "https:$link"))
                     }
                 }
             }

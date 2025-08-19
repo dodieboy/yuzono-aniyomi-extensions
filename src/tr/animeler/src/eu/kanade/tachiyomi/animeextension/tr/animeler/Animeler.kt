@@ -34,7 +34,7 @@ import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
 import eu.kanade.tachiyomi.util.parseAs
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.FormBody
@@ -223,7 +223,7 @@ class Animeler : AnimeHttpSource(), ConfigurableAnimeSource {
     private val streamlareExtractor by lazy { StreamlareExtractor(client) }
     private val streamtapeExtractor by lazy { StreamTapeExtractor(client) }
     private val uqloadExtractor by lazy { UqloadExtractor(client) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val vudeoExtractor by lazy { VudeoExtractor(client) }
 
     override fun videoListParse(response: Response): List<Video> {

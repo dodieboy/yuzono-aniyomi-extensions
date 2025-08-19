@@ -29,7 +29,7 @@ import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.lib.youruploadextractor.YourUploadExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.Request
@@ -169,7 +169,7 @@ open class Serieskao : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
     }
 
     /*--------------------------------Video extractors------------------------------------*/
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val okruExtractor by lazy { OkruExtractor(client) }
     private val filemoonExtractor by lazy { FilemoonExtractor(client) }
     private val uqloadExtractor by lazy { UqloadExtractor(client) }

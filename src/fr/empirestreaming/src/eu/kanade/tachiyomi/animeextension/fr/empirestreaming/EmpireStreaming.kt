@@ -22,7 +22,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMap
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.json.Json
 import okhttp3.Response
 import org.jsoup.nodes.Document
@@ -164,7 +164,7 @@ class EmpireStreaming : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
 
         return when (hoster) {
             "doodstream" -> DoodExtractor(client).videosFromUrl(url)
-            "voe" -> VoeExtractor(client).videosFromUrl(url)
+            "voe" -> VoeExtractor(client, headers).videosFromUrl(url)
             "Eplayer" -> EplayerExtractor(client).videosFromUrl(url)
             else -> null
         } ?: emptyList()

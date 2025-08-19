@@ -21,7 +21,7 @@ import eu.kanade.tachiyomi.lib.youruploadextractor.YourUploadExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.nodes.Element
@@ -132,7 +132,7 @@ class Hentaitk : ConfigurableAnimeSource, AnimeHttpSource() {
     /*--------------------------------Video extractors------------------------------------*/
     private val okruExtractor by lazy { OkruExtractor(client) }
     private val streamWishExtractor by lazy { StreamWishExtractor(client, headers) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val yourUploadExtractor by lazy { YourUploadExtractor(client) }
     private val streamHideVidExtractor by lazy { StreamHideVidExtractor(client, headers) }
     private val doodExtractor by lazy { DoodExtractor(client) }

@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.Response
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -155,7 +155,7 @@ class Okanime : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
     private val doodExtractor by lazy { DoodExtractor(client) }
     private val mp4uploadExtractor by lazy { Mp4uploadExtractor(client) }
     private val okruExtractor by lazy { OkruExtractor(client) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val vidBomExtractor by lazy { VidBomExtractor(client) }
 
     private fun extractVideosFromUrl(url: String, quality: String, selection: Set<String>): List<Video> {

@@ -20,7 +20,7 @@ import eu.kanade.tachiyomi.lib.youruploadextractor.YourUploadExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.FormBody
 import okhttp3.Request
 import okhttp3.Response
@@ -200,7 +200,7 @@ class MetroSeries : ConfigurableAnimeSource, AnimeHttpSource() {
                     YourUploadExtractor(client).videoFromUrl(src, headers, prefix = "$prefix ").let { videoList.addAll(it) }
                 }
                 if (src.contains("voe")) {
-                    VoeExtractor(client).videosFromUrl(src, prefix = "$prefix ").also(videoList::addAll)
+                    VoeExtractor(client, headers).videosFromUrl(src, prefix = "$prefix ").also(videoList::addAll)
                 }
                 if (src.contains("wishembed") || src.contains("streamwish") || src.contains("wish")) {
                     StreamWishExtractor(client, headers).videosFromUrl(src) { "$prefix StreamWish:$it" }.also(videoList::addAll)

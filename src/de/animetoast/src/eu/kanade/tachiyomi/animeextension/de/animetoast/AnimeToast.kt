@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.lib.mp4uploadextractor.Mp4uploadExtractor
 import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.nodes.Document
@@ -145,7 +145,7 @@ class AnimeToast : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
                                     link.contains("https://voe.sx") && hosterSelection?.contains(
                                         "voe",
                                     ) == true -> {
-                                        videoList.addAll(VoeExtractor(client).videosFromUrl(link))
+                                        videoList.addAll(VoeExtractor(client, headers).videosFromUrl(link))
                                     }
                                 }
                             }
@@ -205,7 +205,7 @@ class AnimeToast : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
                         val link = element.select("a").attr("abs:href")
                         when {
                             link.contains("https://voe.sx") && hosterSelection?.contains("voe") == true -> {
-                                videoList.addAll(VoeExtractor(client).videosFromUrl(link))
+                                videoList.addAll(VoeExtractor(client, headers).videosFromUrl(link))
                             }
                         }
                     }

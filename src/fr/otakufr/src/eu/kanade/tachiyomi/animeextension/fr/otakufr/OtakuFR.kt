@@ -20,7 +20,7 @@ import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import okhttp3.Response
@@ -142,7 +142,7 @@ class OtakuFR : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
     private val upstreamExtractor by lazy { UpstreamExtractor(client) }
     private val okruExtractor by lazy { OkruExtractor(client) }
     private val doodExtractor by lazy { DoodExtractor(client) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val sibnetExtractor by lazy { SibnetExtractor(client) }
 
     override fun videoListParse(response: Response): List<Video> {

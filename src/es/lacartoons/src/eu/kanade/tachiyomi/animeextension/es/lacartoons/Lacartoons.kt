@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.lib.youruploadextractor.YourUploadExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.Request
 import okhttp3.Response
 
@@ -141,7 +141,7 @@ class Lacartoons : ConfigurableAnimeSource, AnimeHttpSource() {
             }
             embedUrl.contains("vidhide") || embedUrl.contains("streamhide") ||
                 embedUrl.contains("guccihide") || embedUrl.contains("streamvid") -> StreamHideVidExtractor(client, headers).videosFromUrl(url)
-            embedUrl.contains("voe") -> VoeExtractor(client).videosFromUrl(url)
+            embedUrl.contains("voe") -> VoeExtractor(client, headers).videosFromUrl(url)
             embedUrl.contains("yourupload") || embedUrl.contains("upload") -> YourUploadExtractor(client).videoFromUrl(url, headers = headers)
             else -> UniversalExtractor(client).videosFromUrl(url, headers)
         }

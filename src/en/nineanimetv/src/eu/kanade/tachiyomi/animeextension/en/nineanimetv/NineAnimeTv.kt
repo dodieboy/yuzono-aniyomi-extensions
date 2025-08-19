@@ -3,15 +3,13 @@ package eu.kanade.tachiyomi.animeextension.en.nineanimetv
 import eu.kanade.tachiyomi.animesource.model.AnimesPage
 import eu.kanade.tachiyomi.animesource.model.SAnime
 import eu.kanade.tachiyomi.animesource.model.Video
-import eu.kanade.tachiyomi.lib.megacloudextractor.MegaCloudExtractor
 import eu.kanade.tachiyomi.multisrc.zorotheme.ZoroTheme
 import eu.kanade.tachiyomi.network.GET
-import eu.kanade.tachiyomi.network.asObservableSuccess
+import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.util.asJsoup
 import okhttp3.Request
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import rx.Observable
 
 class NineAnimeTv : ZoroTheme(
     "en",
@@ -36,11 +34,10 @@ class NineAnimeTv : ZoroTheme(
 
     private val topViewSelector = "#top-viewed-month li, #top-viewed-week li, #top-viewed-day li"
 
-    @Suppress("OVERRIDE_DEPRECATION")
-    override fun fetchPopularAnime(page: Int): Observable<AnimesPage> {
+    override suspend fun getPopularAnime(page: Int): AnimesPage {
         return client.newCall(popularAnimeRequest(page))
-            .asObservableSuccess()
-            .map { response ->
+            .awaitSuccess()
+            .use { response ->
                 if (page == 1) {
                     val document = response.asJsoup()
 
@@ -93,11 +90,11 @@ class NineAnimeTv : ZoroTheme(
         return if (full && value != null) "\n$tag $value" else value
     }
 
-    private val megaCloudExtractor by lazy { MegaCloudExtractor(client, headers, preferences) }
+    // private val rapidCloudExtractor by lazy { RapidCloudExtractor(client, headers, preferences) }
 
     override fun extractVideo(server: VideoData): List<Video> {
         return when (server.name) {
-            "DouVideo", "Vidstreaming", "Vidcloud" -> megaCloudExtractor.getVideosFromUrl(server.link, server.type, server.name)
+            // "DouVideo", "Vidstreaming", "Vidcloud" -> rapidCloudExtractor.getVideosFromUrl(server.link, server.type, server.name)
             else -> emptyList()
         }
     }

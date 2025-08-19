@@ -32,7 +32,7 @@ import eu.kanade.tachiyomi.network.await
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMap
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.FormBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
@@ -222,7 +222,7 @@ class Otakuverso : ConfigurableAnimeSource, AnimeHttpSource() {
 
     /*-------------------------------- Video extractors ------------------------------------*/
     private val universalExtractor by lazy { UniversalExtractor(client) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val okruExtractor by lazy { OkruExtractor(client) }
     private val filemoonExtractor by lazy { FilemoonExtractor(client) }
     private val uqloadExtractor by lazy { UqloadExtractor(client) }

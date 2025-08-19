@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.lib.filemoonextractor.FilemoonExtractor
 import eu.kanade.tachiyomi.lib.streamtapeextractor.StreamTapeExtractor
 import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.network.POST
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
@@ -383,7 +383,7 @@ class Kool : ConfigurableAnimeSource, AnimeHttpSource() {
                 item.jsonObject["url"]!!.jsonPrimitive.content.contains("https://voe") ||
                     item.jsonObject["url"]!!.jsonPrimitive.content.contains("scatch176duplicities") && hosterSelection?.contains("voe") == true -> {
                     val videoUrl = item.jsonObject["url"]!!.jsonPrimitive.content
-                    videoList.addAll(VoeExtractor(client).videosFromUrl(videoUrl))
+                    videoList.addAll(VoeExtractor(client, headers).videosFromUrl(videoUrl))
                 }
                 item.jsonObject["url"]!!.jsonPrimitive.content.contains("https://clipboard") && hosterSelection?.contains("clip") == true -> {
                     val videoUrl = item.jsonObject["url"]!!.jsonPrimitive.content

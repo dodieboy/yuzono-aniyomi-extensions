@@ -28,7 +28,7 @@ import eu.kanade.tachiyomi.lib.youruploadextractor.YourUploadExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import okhttp3.Response
@@ -128,7 +128,7 @@ class CineCalidad : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
         val embedUrl = url.lowercase()
         return runCatching {
             when {
-                embedUrl.contains("voe") -> VoeExtractor(client).videosFromUrl(url)
+                embedUrl.contains("voe") -> VoeExtractor(client, headers).videosFromUrl(url)
                 embedUrl.contains("ok.ru") || embedUrl.contains("okru") -> OkruExtractor(client).videosFromUrl(url)
                 embedUrl.contains("filemoon") || embedUrl.contains("moonplayer") -> {
                     val vidHeaders = headers.newBuilder()

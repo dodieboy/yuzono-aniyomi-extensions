@@ -15,7 +15,7 @@ import eu.kanade.tachiyomi.animesource.online.ParsedAnimeHttpSource
 import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.Headers
 import okhttp3.Request
 import okhttp3.Response
@@ -82,7 +82,7 @@ class FilmPalast : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
             }
             when {
                 url.contains("voe") && hosterSelection.contains("voe") ->
-                    VoeExtractor(client).videosFromUrl(url)
+                    VoeExtractor(client, headers).videosFromUrl(url)
 
                 url.contains("upstream") && hosterSelection.contains("up") ->
                     UpstreamExtractor(client).videoFromUrl(url)

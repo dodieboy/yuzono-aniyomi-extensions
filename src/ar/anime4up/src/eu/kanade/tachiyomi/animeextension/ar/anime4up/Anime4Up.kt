@@ -21,7 +21,7 @@ import eu.kanade.tachiyomi.lib.vidbomextractor.VidBomExtractor
 import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.Request
@@ -191,7 +191,7 @@ class Anime4Up : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
     private val streamwishExtractor by lazy { StreamWishExtractor(client, headers) }
     private val vidbomExtractor by lazy { VidBomExtractor(client) }
     private val vidyardExtractor by lazy { VidYardExtractor(client, headers) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
 
     private fun extractVideos(url: String): List<Video> {
         return when {

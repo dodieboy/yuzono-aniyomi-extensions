@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.FormBody
 import okhttp3.Request
 import okhttp3.Response
@@ -209,7 +209,7 @@ class AnimeBase : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
     }
 
     private val streamWishExtractor by lazy { StreamWishExtractor(client, headers) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val unpackerExtractor by lazy { UnpackerExtractor(client, headers) }
     private val vidguardExtractor by lazy { VidGuardExtractor(client) }
 

@@ -28,7 +28,7 @@ import eu.kanade.tachiyomi.lib.youruploadextractor.YourUploadExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
@@ -158,7 +158,7 @@ class Gnula : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
     private fun serverVideoResolver(url: String, prefix: String = ""): List<Video> {
         val embedUrl = url.lowercase()
         return when {
-            embedUrl.contains("voe") -> VoeExtractor(client).videosFromUrl(url, prefix)
+            embedUrl.contains("voe") -> VoeExtractor(client, headers).videosFromUrl(url, prefix)
             embedUrl.contains("ok.ru") || embedUrl.contains("okru") -> OkruExtractor(client).videosFromUrl(url, prefix)
             embedUrl.contains("filemoon") || embedUrl.contains("moonplayer") -> {
                 val vidHeaders = headers.newBuilder()

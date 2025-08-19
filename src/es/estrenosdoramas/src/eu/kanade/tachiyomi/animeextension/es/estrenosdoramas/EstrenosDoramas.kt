@@ -18,7 +18,7 @@ import eu.kanade.tachiyomi.lib.youruploadextractor.YourUploadExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.Request
 import okhttp3.Response
 
@@ -131,7 +131,7 @@ class EstrenosDoramas : ConfigurableAnimeSource, AnimeHttpSource() {
     private val okruExtractor by lazy { OkruExtractor(client) }
     private val streamWishExtractor by lazy { StreamWishExtractor(client, headers) }
     private val streamHideVidExtractor by lazy { StreamHideVidExtractor(client, headers) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val yourUploadExtractor by lazy { YourUploadExtractor(client) }
     private val vidGuardExtractor by lazy { VidGuardExtractor(client) }
 

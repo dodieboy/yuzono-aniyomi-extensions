@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.lib.streamtapeextractor.StreamTapeExtractor
 import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import okhttp3.Response
@@ -184,7 +184,7 @@ class Toonitalia : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
         }
     }
 
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val streamZExtractor by lazy { StreamZExtractor(client) }
     private val streamTapeExtractor by lazy { StreamTapeExtractor(client) }
     private val maxStreamExtractor by lazy { MaxStreamExtractor(client, headers) }

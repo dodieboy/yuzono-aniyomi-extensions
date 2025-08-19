@@ -24,7 +24,7 @@ import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
 import eu.kanade.tachiyomi.util.parallelMapBlocking
 import eu.kanade.tachiyomi.util.parseAs
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import kotlinx.serialization.Serializable
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
@@ -176,7 +176,7 @@ class AniSama : ParsedAnimeHttpSource(), ConfigurableAnimeSource {
     private val filemoonExtractor by lazy { FilemoonExtractor(client) }
     private val sibnetExtractor by lazy { SibnetExtractor(client) }
     private val sendvidExtractor by lazy { SendvidExtractor(client, headers) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val vidCdnExtractor by lazy { VidCdnExtractor(client) }
     private val doodExtractor by lazy { DoodExtractor(client) }
     private val streamHideVidExtractor by lazy { StreamHideVidExtractor(client, headers) }

@@ -17,7 +17,7 @@ import eu.kanade.tachiyomi.lib.youruploadextractor.YourUploadExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.nodes.Document
@@ -85,7 +85,7 @@ open class TioanimeH(override val name: String, override val baseUrl: String) : 
     override fun episodeFromElement(element: Element) = throw UnsupportedOperationException()
 
     /*--------------------------------Video extractors------------------------------------*/
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val vidGuardExtractor by lazy { VidGuardExtractor(client) }
     private val okruExtractor by lazy { OkruExtractor(client) }
     private val yourUploadExtractor by lazy { YourUploadExtractor(client) }

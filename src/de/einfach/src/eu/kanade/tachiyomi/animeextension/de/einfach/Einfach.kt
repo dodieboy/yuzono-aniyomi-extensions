@@ -24,7 +24,7 @@ import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.Response
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -192,7 +192,7 @@ class Einfach : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
     private val streamtapeExtractor by lazy { StreamTapeExtractor(client) }
     private val streamwishExtractor by lazy { StreamWishExtractor(client, headers) }
     private val vidozaExtractor by lazy { VidozaExtractor(client) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
 
     private fun getVideosFromUrl(name: String, url: String): List<Video> {
         return when (name) {

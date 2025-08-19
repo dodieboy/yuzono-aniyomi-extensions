@@ -23,7 +23,7 @@ import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
 import eu.kanade.tachiyomi.util.parallelCatchingFlatMapBlocking
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.FormBody
 import okhttp3.Request
 import okhttp3.Response
@@ -178,7 +178,7 @@ class MonosChinos : ConfigurableAnimeSource, AnimeHttpSource() {
 
     override fun getFilterList(): AnimeFilterList = MonosChinosFilters.FILTER_LIST
 
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val streamwishExtractor by lazy { StreamWishExtractor(client, headers) }
     private val filemoonExtractor by lazy { FilemoonExtractor(client) }
     private val mixdropExtractor by lazy { MixDropExtractor(client) }

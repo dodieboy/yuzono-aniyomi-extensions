@@ -16,7 +16,7 @@ import eu.kanade.tachiyomi.lib.playlistutils.PlaylistUtils
 import eu.kanade.tachiyomi.lib.voeextractor.VoeExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import okhttp3.Response
@@ -103,7 +103,7 @@ class MundoDonghua : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
                     if (unpack.contains("amagi_tab")) {
                         fetchUrls(unpack).map { url ->
                             try {
-                                VoeExtractor(client).videosFromUrl(url).also(videoList::addAll)
+                                VoeExtractor(client, headers).videosFromUrl(url).also(videoList::addAll)
                             } catch (_: Exception) {}
                         }
                     }

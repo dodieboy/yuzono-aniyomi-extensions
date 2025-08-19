@@ -19,7 +19,7 @@ import eu.kanade.tachiyomi.lib.vudeoextractor.VudeoExtractor
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferencesLazy
+import extensions.utils.getPreferencesLazy
 import okhttp3.Cookie
 import okhttp3.FormBody
 import okhttp3.Request
@@ -195,7 +195,7 @@ class VerSeriesOnline : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
     private val doodExtractor by lazy { DoodExtractor(client) }
     private val streamwishExtractor by lazy { StreamWishExtractor(client, headers) }
     private val streamtapeExtractor by lazy { StreamTapeExtractor(client) }
-    private val voeExtractor by lazy { VoeExtractor(client) }
+    private val voeExtractor by lazy { VoeExtractor(client, headers) }
     private val uqloadExtractor by lazy { UqloadExtractor(client) }
     private val vudeoExtractor by lazy { VudeoExtractor(client) }
 
