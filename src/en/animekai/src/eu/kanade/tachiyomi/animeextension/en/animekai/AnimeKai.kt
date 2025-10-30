@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.animeextension.en.animekai
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.preference.PreferenceScreen
-import eu.kanade.tachiyomi.animeextension.BuildConfig
 import eu.kanade.tachiyomi.animeextension.en.animekai.AnimeKaiFilters.CountriesFilter
 import eu.kanade.tachiyomi.animeextension.en.animekai.AnimeKaiFilters.GenresFilter
 import eu.kanade.tachiyomi.animeextension.en.animekai.AnimeKaiFilters.LanguagesFilter
@@ -21,17 +20,21 @@ import eu.kanade.tachiyomi.animesource.model.SEpisode
 import eu.kanade.tachiyomi.animesource.model.Video
 import eu.kanade.tachiyomi.animesource.online.ParsedAnimeHttpSource
 import eu.kanade.tachiyomi.network.GET
+import eu.kanade.tachiyomi.network.POST
 import eu.kanade.tachiyomi.network.awaitSuccess
 import eu.kanade.tachiyomi.network.interceptor.rateLimitHost
 import eu.kanade.tachiyomi.util.asJsoup
+import eu.kanade.tachiyomi.util.parallelFlatMap
 import eu.kanade.tachiyomi.util.parallelMapNotNull
 import eu.kanade.tachiyomi.util.parseAs
 import extensions.utils.LazyMutable
-import extensions.utils.addEditTextPreference
 import extensions.utils.addListPreference
 import extensions.utils.addSetPreference
 import extensions.utils.delegate
 import extensions.utils.getPreferencesLazy
+import extensions.utils.toRequestBody
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import okhttp3.CacheControl
 import okhttp3.Headers
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -50,14 +53,16 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
 
     override val supportsLatest = true
 
-    private val preferences by getPreferencesLazy()
+    private val preferences by getPreferencesLazy {
+        clearOldPrefs()
+    }
 
     override var baseUrl: String
         by preferences.delegate(PREF_DOMAIN_KEY, PREF_DOMAIN_DEFAULT)
 
     override fun headersBuilder(): Headers.Builder {
         return super.headersBuilder()
-            .add("User-Agent", "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36")
+            .set("User-Agent", "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36")
             .add("Referer", "$baseUrl/")
     }
 
@@ -249,11 +254,12 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
                     ?: throw IllegalStateException("Anime ID not found")
             }
 
-        val decoded = decode(animeId)
+        val enc = encDecEndpoints(animeId)
+            .parseAs<ResultResponse>().result
 
-        val chapterListRequest = GET("$baseUrl/ajax/episodes/list?ani_id=$animeId&_=$decoded", docHeaders)
+        val chapterListRequest = GET("$baseUrl/ajax/episodes/list?ani_id=$animeId&_=$enc", docHeaders)
         val document = client.newCall(chapterListRequest)
-            .awaitSuccess().use { it.parseAs<ResultResponse>().toDocument() }
+            .awaitSuccess().parseAs<ResultResponse>().toDocument()
 
         val episodeElements = document.select(episodeListSelector())
         return episodeElements.mapNotNull {
@@ -292,12 +298,13 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
 
     override suspend fun getVideoList(episode: SEpisode): List<Video> {
         val token = episode.url
-        val decodedToken = decode(token)
+        val enc = encDecEndpoints(token)
+            .parseAs<ResultResponse>().result
 
         val typeSelection = preferences.typeToggle
         val hosterSelection = preferences.hostToggle
 
-        val servers = client.newCall(GET("$baseUrl/ajax/links/list?token=$token&_=$decodedToken", docHeaders))
+        val servers = client.newCall(GET("$baseUrl/ajax/links/list?token=$token&_=$enc", docHeaders))
             .awaitSuccess().use { response ->
                 val document = response.parseAs<ResultResponse>().toDocument()
                 document.select("div.server-items[data-id]")
@@ -323,7 +330,7 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
                 Log.e("AnimeKai", "Failed to extract iframe from server: $server", e)
                 null
             }
-        }.flatMap { server ->
+        }.parallelFlatMap { server ->
             try {
                 extractVideo(server)
             } catch (e: Exception) {
@@ -341,24 +348,25 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
 
     // ============================= Utilities ==============================
 
-    private var universalExtractor by LazyMutable { UniversalExtractor(client, preferences.prefTimeout.toLong()) }
+    private var megaUpExtractor by LazyMutable { MegaUpExtractor(client, docHeaders) }
 
     private suspend fun extractIframe(server: VideoCode): VideoData {
         val (type, lid, serverName) = server
 
-        val decodedLid = decode(lid)
+        val enc = encDecEndpoints(lid)
+            .parseAs<ResultResponse>().result
 
-        val encodedLink = client.newCall(GET("$baseUrl/ajax/links/view?id=$lid&_=$decodedLid", docHeaders))
-            .awaitSuccess().use { json ->
-                json.parseAs<ResultResponse>().result
-            }
+        val encodedLink = client.newCall(GET("$baseUrl/ajax/links/view?id=$lid&_=$enc", docHeaders))
+            .awaitSuccess().parseAs<ResultResponse>().result
 
-        val iframe = decode(encodedLink, "d").let { json ->
-            val url = json.parseAs<IframeResponse>().url
-            url.toHttpUrl().newBuilder()
-                .addQueryParameter("autostart", "true")
-                .build().toString()
+        val postBody = buildJsonObject {
+            put("text", encodedLink)
         }
+        val payload = postBody.toRequestBody()
+
+        val iframe = client.newCall(POST("https://enc-dec.app/api/dec-kai", body = payload))
+            .awaitSuccess().parseAs<IframeResponse>()
+            .result.url
 
         val typeSuffix = when (type) {
             "sub" -> "Hard Sub"
@@ -368,37 +376,24 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
         }
         val name = "$serverName | [$typeSuffix]"
 
-        return VideoData(type, iframe, name)
+        return VideoData(iframe, name)
     }
 
-    private fun extractVideo(server: VideoData): List<Video> {
-        val (type, iframe, serverName) = server
-
+    private suspend fun extractVideo(server: VideoData): List<Video> {
         return try {
-            /*
-             * Server 2:
-             *  - Playlist like: `list.m3u8` with .ts file;
-             *  - The Dub will load separated sub .vtt file;
-             *  - The S-Sub seems using embedded subs;
-             * Server 1:
-             *  - Playlist like: `list,Z3r-aM6peKE-ic4lJkPfnljqs9Q0UQ.m3u8`, all the segments are
-             *    using random file extension but can be replaced to .ts;
-             *  - Dub & S-Sub are similar to Server 2;
-             */
-            if (type == "sub") {
-                universalExtractor.videosFromUrl(iframe, docHeaders, serverName, withSub = false)
-            } else {
-                universalExtractor.videosFromUrl(iframe, docHeaders, serverName)
-            }
+            megaUpExtractor.videosFromUrl(
+                server.iframe,
+                server.serverName,
+            )
         } catch (e: Exception) {
-            Log.e("AnimeKai", "Failed to extract video from iframe: $iframe", e)
+            Log.e("AnimeKai", "Error extracting videos for ${server.serverName}", e)
             emptyList()
         }
     }
 
-    private suspend fun decode(value: String, type: String = "e"): String {
-        val url = "${BuildConfig.KAISVA}/?f=$type&d=$value"
-        return client.newCall(GET(url, docHeaders)).awaitSuccess().use { it.body.string() }
+    private suspend fun encDecEndpoints(enc: String): String {
+        return client.newCall(GET("https://enc-dec.app/api/enc-kai?text=$enc", docHeaders))
+            .awaitSuccess().body.string()
     }
 
     override fun List<Video>.sort(): List<Video> {
@@ -437,9 +432,9 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
         private const val PREF_DOMAIN_KEY = "preferred_domain"
         private val DOMAIN_ENTRIES = listOf(
             "animekai.to",
-            "animekai.bz",
             "animekai.cc",
             "animekai.ac",
+            "anikai.to",
         )
         private val DOMAIN_VALUES = DOMAIN_ENTRIES.map { "https://$it" }
         private val PREF_DOMAIN_DEFAULT = DOMAIN_VALUES.first()
@@ -469,13 +464,31 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
         private const val PREF_TYPE_KEY = "preferred_type"
         private const val PREF_TYPE_DEFAULT = "[Soft Sub]"
 
-        private const val PREF_TIMEOUT_KEY = "parsing_timeout"
-        private const val PREF_TIMEOUT_DEFAULT = "10"
-
         private const val RATE_LIMIT = 5
     }
 
     // ============================== Settings ==============================
+
+    private fun SharedPreferences.clearOldPrefs(): SharedPreferences {
+        val domain = getString(PREF_DOMAIN_KEY, PREF_DOMAIN_DEFAULT)!!.removePrefix("https://")
+        val hostToggle = getStringSet(PREF_HOSTER_KEY, HOSTERS.toSet())!!
+
+        val invalidDomain = domain !in DOMAIN_ENTRIES
+        val invalidHosters = hostToggle.any { it !in HOSTERS }
+
+        if (invalidDomain || invalidHosters) {
+            edit().also { editor ->
+                if (invalidDomain) {
+                    editor.putString(PREF_DOMAIN_KEY, PREF_DOMAIN_DEFAULT)
+                }
+                if (invalidHosters) {
+                    editor.putStringSet(PREF_HOSTER_KEY, HOSTERS.toSet())
+                    editor.putString(PREF_SERVER_KEY, PREF_SERVER_DEFAULT)
+                }
+            }.apply()
+        }
+        return this
+    }
 
     private var useEnglish by LazyMutable { preferences.getTitleLang == "English" }
 
@@ -497,9 +510,6 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
     private val SharedPreferences.typeToggle: Set<String>
         by preferences.delegate(PREF_TYPE_TOGGLE_KEY, DEFAULT_TYPES)
 
-    private val SharedPreferences.prefTimeout
-        by preferences.delegate(PREF_TIMEOUT_KEY, PREF_TIMEOUT_DEFAULT)
-
     override fun setupPreferenceScreen(screen: PreferenceScreen) {
         screen.addListPreference(
             key = PREF_DOMAIN_KEY,
@@ -514,6 +524,7 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
             client = network.client.newBuilder()
                 .rateLimitHost(baseUrl.toHttpUrl(), permits = RATE_LIMIT, period = 1, unit = TimeUnit.SECONDS)
                 .build()
+            megaUpExtractor = MegaUpExtractor(client, docHeaders)
         }
 
         screen.addListPreference(
@@ -571,20 +582,5 @@ class AnimeKai : ConfigurableAnimeSource, ParsedAnimeHttpSource() {
             entryValues = TYPES_VALUES,
             default = DEFAULT_TYPES,
         )
-
-        screen.addEditTextPreference(
-            key = PREF_TIMEOUT_KEY,
-            default = PREF_TIMEOUT_DEFAULT,
-            title = "Timeout for slow network",
-            summary = timeoutSummary(preferences.prefTimeout),
-            getSummary = timeoutSummary,
-            dialogMessage = "Set timeout to wait for parsing video in seconds",
-            validate = { it.isNotBlank() && (it.toIntOrNull() ?: 0) > 0 },
-            validationMessage = { "The value is invalid. It must be a natural number." },
-        ) {
-            universalExtractor = UniversalExtractor(client, it.toLongOrNull() ?: PREF_TIMEOUT_DEFAULT.toLong())
-        }
     }
-
-    val timeoutSummary: (String) -> String = { "Current: $it seconds" }
 }

@@ -11,7 +11,6 @@ data class VideoCode(
 )
 
 data class VideoData(
-    val type: String,
     val iframe: String,
     val serverName: String,
 )
@@ -25,9 +24,14 @@ data class ResultResponse(
     }
 }
 
-// {"url":"https:\/\/megaup.site\/e\/0cv1ZHy0WSyJcOLwFrpK6BPpCQ","skip":...}
 @Serializable
 data class IframeResponse(
+    val result: IframeDto,
+)
+
+// {"url":"https:\/\/megaup.site\/e\/0cv1ZHy0WSyJcOLwFrpK6BPpCQ","skip":...}
+@Serializable
+data class IframeDto(
     val url: String,
     val skip: SkipDto?,
 )
