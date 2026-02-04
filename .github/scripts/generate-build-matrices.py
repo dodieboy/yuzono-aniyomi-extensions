@@ -68,7 +68,7 @@ def get_module_list(ref: str) -> tuple[list[str], list[str]]:
         deleted.add(f"{lang}.{extension}")
         return True
 
-    if libs and not core_files_changed:
+    if len(libs) != 0 and not core_files_changed:
         modules.update([
             module for module in
             run_command("./gradlew -q " + " ".join(libs)).splitlines()
