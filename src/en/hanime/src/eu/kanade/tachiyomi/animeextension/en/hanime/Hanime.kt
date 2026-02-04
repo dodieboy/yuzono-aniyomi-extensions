@@ -228,13 +228,13 @@ class Hanime :
                     filter.state.forEach { tag ->
                         if (tag.isIncluded()) {
                             includedTags.add(
-                                "\"" + tag.id.toLowerCase(
+                                "\"" + tag.id.lowercase(
                                     Locale.US,
                                 ) + "\"",
                             )
                         } else if (tag.isExcluded()) {
                             blackListedTags.add(
-                                "\"" + tag.id.toLowerCase(
+                                "\"" + tag.id.lowercase(
                                     Locale.US,
                                 ) + "\"",
                             )
@@ -243,7 +243,7 @@ class Hanime :
                 }
 
                 is TagInclusionMode -> {
-                    tagsMode = filter.values[filter.state].toUpperCase(Locale.US)
+                    tagsMode = filter.values[filter.state].uppercase(Locale.US)
                 }
 
                 is SortFilter -> {
@@ -262,7 +262,7 @@ class Hanime :
                     filter.state.forEach { brand ->
                         if (brand.state) {
                             brands.add(
-                                "\"" + brand.id.toLowerCase(
+                                "\"" + brand.id.lowercase(
                                     Locale.US,
                                 ) + "\"",
                             )

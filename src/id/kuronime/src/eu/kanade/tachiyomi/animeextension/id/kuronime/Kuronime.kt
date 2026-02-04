@@ -49,7 +49,7 @@ class Kuronime :
         return anime
     }
 
-    private fun parseStatus(statusString: String): Int = when (statusString.toLowerCase(Locale.US)) {
+    private fun parseStatus(statusString: String): Int = when (statusString.lowercase(Locale.US)) {
         "ongoing" -> SAnime.ONGOING
         "completed" -> SAnime.COMPLETED
         else -> SAnime.UNKNOWN

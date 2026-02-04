@@ -45,8 +45,8 @@ class NeoNime :
             .getOrNull() ?: 0L
     }
     private fun parseStatus(statusString: String): Int = when {
-        statusString.toLowerCase(Locale.US).contains("ongoing") -> SAnime.ONGOING
-        statusString.toLowerCase(Locale.US).contains("completed") -> SAnime.COMPLETED
+        statusString.lowercase(Locale.US).contains("ongoing") -> SAnime.ONGOING
+        statusString.lowercase(Locale.US).contains("completed") -> SAnime.COMPLETED
         else -> SAnime.UNKNOWN
     }
 
