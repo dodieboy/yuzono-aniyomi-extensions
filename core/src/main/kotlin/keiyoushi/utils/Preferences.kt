@@ -1,5 +1,6 @@
-package extensions.utils
+package keiyoushi.utils
 
+import android.R
 import android.app.Application
 import android.content.SharedPreferences
 import android.text.Editable
@@ -202,7 +203,7 @@ fun PreferenceScreen.getEditTextPreference(
                             val isValid = text.isBlank() || validate(text)
 
                             editText.error = if (!isValid) validationMessage?.invoke(text) else null
-                            editText.rootView.findViewById<Button>(android.R.id.button1)
+                            editText.rootView.findViewById<Button>(R.id.button1)
                                 ?.isEnabled = editText.error == null
                         }
                     },
