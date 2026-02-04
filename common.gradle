@@ -77,7 +77,7 @@ android {
         release {
             signingConfig = signingConfigs.release
             minifyEnabled = false
-//            vcsInfo.include = false
+            vcsInfo.include = false
         }
     }
 
@@ -90,7 +90,7 @@ android {
     }
 
     buildTypes {
-        all {
+        configureEach {
             buildConfigField "String", "MEGACLOUD_API", "\"${System.getenv("MEGACLOUD_API") ?: localProperties.getProperty("MEGACLOUD_API", "")}\""
             buildConfigField "String", "KISSKH_API", "\"${System.getenv("KISSKH_API") ?: localProperties.getProperty("KISSKH_API", "")}\""
             buildConfigField "String", "KISSKH_SUB_API", "\"${System.getenv("KISSKH_SUB_API") ?: localProperties.getProperty("KISSKH_SUB_API", "")}\""
@@ -114,15 +114,6 @@ dependencies {
     if (theme != null) implementation(theme) // Overrides core launcher icons
     implementation(project(":core"))
     compileOnly(libs.bundles.common)
-}
-
-configurations.configureEach {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == 'org.jetbrains.kotlin' && details.requested.name == 'kotlin-stdlib-jdk8' && details.requested.version == '1.7.0') {
-            details.useVersion(libs.versions.kotlin.version.get())
-            details.because 'Fix problems with dev.datlag JsUnpacker'
-        }
-    }
 }
 
 tasks.register("copyManifestFile", Copy) {
