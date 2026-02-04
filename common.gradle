@@ -76,7 +76,7 @@ android {
         release {
             signingConfig = signingConfigs.release
             minifyEnabled = false
-            vcsInfo.include = false
+//            vcsInfo.include = false
         }
     }
 
