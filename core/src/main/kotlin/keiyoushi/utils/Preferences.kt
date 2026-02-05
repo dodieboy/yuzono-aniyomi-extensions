@@ -1,6 +1,5 @@
 package keiyoushi.utils
 
-import android.R
 import android.app.Application
 import android.content.SharedPreferences
 import android.text.Editable
@@ -106,7 +105,7 @@ class PreferenceDelegate<T>(
                 null -> preferences.all[key] as T
                 else -> throw IllegalArgumentException("Unsupported type: ${default.javaClass}")
             }
-        } catch (e: ClassCastException) {
+        } catch (_: ClassCastException) {
             default
         }
     }
@@ -203,7 +202,7 @@ fun PreferenceScreen.getEditTextPreference(
                         val isValid = text.isBlank() || validate(text)
 
                         editText.error = if (!isValid) validationMessage?.invoke(text) else null
-                        editText.rootView.findViewById<Button>(R.id.button1)
+                        editText.rootView.findViewById<Button>(android.R.id.button1)
                             ?.isEnabled = editText.error == null
                     }
                 },
