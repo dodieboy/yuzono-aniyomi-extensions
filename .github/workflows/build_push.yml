@@ -13,8 +13,7 @@ on:
   # Manual trigger
   workflow_dispatch:
 
-permissions:
-  contents: write
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -26,6 +25,8 @@ env:
 
 jobs:
   prepare:
+    permissions:
+      contents: write
     name: Prepare job
     runs-on: ubuntu-latest
     timeout-minutes: 10
