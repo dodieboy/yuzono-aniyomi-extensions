@@ -39,7 +39,7 @@ inline fun <reified T> Response.parseAs(json: Json = jsonInstance): T = use { js
  * @param json The [Json] instance to use for parsing. Defaults to the injected instance.
  * @param transform A function to transform the JSON string before it's decoded.
  */
-inline fun <reified T> Response.parseAs(json: Json = jsonInstance, transform: (String) -> String): T = body.string().parseAs(json, transform)
+inline fun <reified T> Response.parseAs(json: Json = jsonInstance, transform: (String) -> String): T = use { body.string().parseAs(json, transform) }
 
 /**
  * Parses a [JsonElement] into an object of type [T].
