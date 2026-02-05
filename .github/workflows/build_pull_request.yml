@@ -92,8 +92,8 @@ jobs:
       - name: Checkout PR
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          persist-credentials: false
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Java
         uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
@@ -157,6 +157,8 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           path: PR
+          fetch-depth: 0
+          persist-credentials: false
 
       - name: Create repo artifacts
         run: |
@@ -173,7 +175,8 @@ jobs:
           repository: cuong-tran/aniyomi-repo
           ref: repo
           path: repo
-
+          fetch-depth: 0
+          persist-credentials: false
       - name: Merge repo
         run: |
           cd repo

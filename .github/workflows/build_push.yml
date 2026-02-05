@@ -13,7 +13,8 @@ on:
   # Manual trigger
   workflow_dispatch:
 
-permissions: {}
+permissions:
+  contents: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -37,8 +38,6 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
-          persist-credentials: false
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set env
         id: set-env
@@ -109,8 +108,8 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           ref: ${{ github.ref_name }}
-          persist-credentials: false
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Java
         uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
@@ -176,6 +175,7 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
           path: ${{ github.ref_name }}
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Create repo artifacts
@@ -194,6 +194,7 @@ jobs:
           token: ${{ secrets.BOT_PAT }}
           ref: repo
           path: repo
+          fetch-depth: 0
           persist-credentials: true
 
       - name: Merge repo
