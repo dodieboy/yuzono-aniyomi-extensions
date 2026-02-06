@@ -3,7 +3,7 @@ ext {
     extClass = '.Pelisplushd'
     themePkg = 'pelisplus'
     baseUrl = 'https://pelisplushd.bz'
-    overrideVersionCode = 83
+    overrideVersionCode = 84
 }
 
 apply from: "$rootDir/common.gradle"
